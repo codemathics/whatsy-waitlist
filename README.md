@@ -1,24 +1,24 @@
-# Whatsy – Landing page
+# whatsy – landing page
 
-Marketing site for Whatsy. Built with **Next.js 14**, **TypeScript**, and **Tailwind CSS**. Ready to deploy on **Vercel**.
+marketing site for whatsy. built with **next.js 14**, **typescript**, and **tailwind css**. ready to deploy on **vercel**.
 
-**Stack:**
+**stack:**
 
-- Next.js 14 (App Router)
-- TypeScript
-- Tailwind CSS
-- Static export (`output: 'export'`) for simple hosting
+- next.js 14 (app router)
+- typescript
+- tailwind css
+- static export (`output: 'export'`) for simple hosting
 
-**Content (Phase 1, no payment):**
+**content (phase 1, no payment):**
 
-- Get Started CTA
-- Email capture (mailto for v1)
-- "Download for macOS"
-- "Telegram, Discord and more coming soon."
+- get started cta
+- email capture (mailto for v1)
+- "download for macos"
+- "telegram, discord and more coming soon."
 
-**Later:** Add Stripe ($5 lifetime + $2/mo or yearly for updates).
+**later:** add stripe ($5 lifetime + $2/mo or yearly for updates).
 
-## Develop
+## develop
 
 ```bash
 cd website
@@ -26,29 +26,29 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+open [http://localhost:3000](http://localhost:3000).
 
-## Build (static export)
+## build (static export)
 
 ```bash
 npm run build
 ```
 
-Output is in `out/`. You can serve it with any static host.
+output is in `out/`. you can serve it with any static host.
 
-## Deploy on Vercel
+## deploy on vercel
 
-1. Push this repo to GitHub (or connect your Git provider in Vercel).
-2. In [Vercel](https://vercel.com), import the project and set **Root Directory** to `website`.
-3. Vercel will detect Next.js and use the default build command (`next build`) and output.
-4. Deploy.
+1. push this repo to github (or connect your git provider in vercel).
+2. in [vercel](https://vercel.com), import the project and set **root directory** to `website`.
+3. vercel will detect next.js and use the default build command (`next build`) and output.
+4. deploy.
 
-Or use the Vercel CLI from the repo root:
+or use the vercel cli from the repo root:
 
 ```bash
 cd website
 npx vercel
 ```
 
-If you remove `output: 'export'` from `next.config.js`, Vercel will run Next.js as a server (full SSR/API routes). The current static export is ideal for a simple landing page.
+if you remove `output: 'export'` from `next.config.js`, vercel will run next.js as a server (full ssr/api routes). the current static export is ideal for a simple landing page.
 # whatsy-waitlist

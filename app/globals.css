@@ -1,0 +1,580 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Louize';
+  src: url('/fonts/Louize-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Louize';
+  src: url('/fonts/Louize-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --font-louize: 'Louize', Georgia, serif;
+  --font-nunito: 'Nunito', ui-rounded, system-ui, sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-nunito);
+  background: #ffffff;
+  color: rgba(0, 0, 0, 0.8);
+  overflow-x: hidden;
+}
+
+::selection {
+  background: rgba(92, 227, 162, 0.3);
+  color: #000;
+}
+
+.gradient-blob-1 {
+  background: linear-gradient(-21deg, rgba(255, 255, 255, 1) 0%, rgba(180, 114, 255, 0.4) 52%, rgba(99, 250, 255, 1) 100%);
+}
+
+.gradient-blob-2 {
+  background: linear-gradient(-22deg, rgba(255, 255, 255, 1) 0%, rgba(42, 222, 232, 1) 47%, rgba(99, 255, 172, 1) 100%);
+}
+
+.btn-glass-green {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(118, 230, 177, 0.95) 0%,
+    rgba(92, 227, 162, 0.85) 100%
+  );
+  backdrop-filter: blur(24px) saturate(1.4);
+  -webkit-backdrop-filter: blur(24px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(92, 227, 162, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+.btn-glass-green::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.btn-glass-green::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 0%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.btn-glass-green:hover {
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.08),
+    0 8px 24px rgba(92, 227, 162, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+  transform: translateY(-1px);
+  border-color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-glass-green:active {
+  transform: translateY(0.5px) scale(0.98);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition-duration: 0.1s;
+}
+
+.btn-glass-dark {
+  position: relative;
+  background: #0a0a0a;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-glass-dark:hover {
+  background: #141414;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transform: translateY(-1px);
+}
+
+.btn-glass-dark:active {
+  transform: translateY(0.5px) scale(0.98);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+  transition-duration: 0.1s;
+}
+
+.pill-glass {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.3);
+  -webkit-backdrop-filter: blur(20px) saturate(1.3);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+.pill-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 15%;
+  right: 15%;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.pill-glass:hover {
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.glass-dashboard {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  border: 0.55px solid rgb(203 203 203 / 50%);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.04),
+    0 2px 4px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  -webkit-mask-image: -webkit-radial-gradient(circle, white 100%, black 100%);
+  mask-image: linear-gradient(#000, #000);
+}
+
+.glass-sidebar {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 0.77px solid rgba(0, 0, 0, 0.06);
+}
+
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  border: 0.77px solid rgba(0, 0, 0, 0.06);
+}
+
+.glass-card .agent-glow {
+  position: absolute;
+  top: 30%;
+  right: -10%;
+  width: 240px;
+  height: 130px;
+  background: linear-gradient(90deg, rgba(92, 227, 162, 1) 0%, rgba(92, 227, 162, 0.5) 100%);
+  filter: blur(60px);
+  opacity: 0.25;
+  pointer-events: none;
+  border-radius: 50%;
+}
+
+.glass-feed {
+  background: rgba(255, 255, 255, 0.03);
+  border: 0.77px solid rgba(0, 0, 0, 0.05);
+}
+
+.pill-glass {
+  position: relative;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.7) 0%,
+    rgba(255, 255, 255, 0.5) 100%
+  );
+  backdrop-filter: blur(20px) saturate(1.4);
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  overflow: hidden;
+}
+
+.pill-glass::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.pill-glass:hover {
+  border-color: rgba(255, 255, 255, 0.7);
+  box-shadow:
+    0 2px 6px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+}
+
+.btn-join {
+  background: linear-gradient(90deg, rgba(92, 227, 162, 1) 0%, rgba(92, 227, 162, 0.75) 100%);
+  box-shadow: 0px 4px 10px 0px rgba(92, 227, 162, 0.25);
+}
+
+.btn-join:hover {
+  box-shadow: 0px 6px 20px 0px rgba(92, 227, 162, 0.35);
+  transform: translateY(-1px);
+}
+
+.dashboard-window {
+  background: rgba(255, 255, 255, 0.4);
+  border: 0.55px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 0px 66px 0px rgba(0, 0, 0, 0.06);
+  border-radius: 33px;
+}
+
+.dashboard-scale-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  overflow: visible;
+}
+
+.story-phone-button {
+  position: relative;
+  width: min(376px, 88vw);
+  aspect-ratio: 346 / 615;
+  border-radius: clamp(40px, 8vw, 76px);
+  border: 8px solid rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.06);
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-phone-button:hover {
+  transform: scale(1.02);
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.18), 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.story-phone-video {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.story-phone-video iframe {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110%;
+  height: 110%;
+  transform: translate(-50%, -50%);
+  border: none;
+  pointer-events: none;
+}
+
+.story-phone-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  z-index: 2;
+}
+
+.story-phone-button:hover .story-phone-overlay {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.story-phone-arrows {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  opacity: 0;
+  transform: scale(0.7);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.story-phone-button:hover .story-phone-arrows {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.story-arrow-tr {
+  transform: translateY(4px);
+}
+
+.story-arrow-bl {
+  transform: translateY(-4px);
+}
+
+.story-phone-mute-btn {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(12px);
+  color: rgba(0, 0, 0, 0.6);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, background 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.story-phone-mute-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  color: rgba(0, 0, 0, 0.85);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+
+.story-phone-gradient {
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+  border-radius: 50%;
+  /* i kept this gradient soft so the phone still feels readable */
+  background: radial-gradient(
+    ellipse 90% 90% at 50% 50%,
+    rgba(255, 255, 255, 0.72) 0%,
+    rgba(180, 114, 255, 0.34) 35%,
+    rgba(99, 250, 255, 0.38) 55%,
+    rgba(99, 255, 172, 0.42) 75%,
+    transparent 100%
+  );
+  animation: story-phone-gradient-pulse 8s ease-in-out infinite;
+  z-index: -1;
+  filter: blur(140px);
+}
+
+@keyframes story-phone-gradient-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.story-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 2000;
+}
+
+.story-modal-panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 0;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(40px) saturate(1.8);
+  -webkit-backdrop-filter: blur(40px) saturate(1.8);
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.story-modal-panel.visible {
+  height: 100%;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.story-modal-panel.closing {
+  height: 0;
+  transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.story-modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  opacity: 0;
+  transition: opacity 0.3s ease 0.25s;
+}
+
+.story-modal-content.visible {
+  opacity: 1;
+}
+
+.story-modal-content.closing {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.story-modal-close {
+  position: fixed;
+  top: 24px;
+  right: 40px;
+  z-index: 10;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  color: rgba(0, 0, 0, 0.55);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  pointer-events: auto;
+}
+
+.story-modal-close.visible {
+  opacity: 1;
+  transform: scale(1);
+  transition-delay: 0.35s;
+}
+
+.story-modal-close.closing {
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0s;
+}
+
+.story-modal-close:hover {
+  background: rgba(255, 255, 255, 0.7);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.08),
+    0 0 16px rgba(92, 227, 162, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.75);
+}
+
+.story-modal-video {
+  width: min(420px, 85vw);
+  height: 80vh;
+  border-radius: 28px;
+  overflow: hidden;
+  background: #000;
+  border: 0.55px solid rgba(0, 0, 0, 0.1);
+  box-shadow:
+    0 24px 80px rgba(0, 0, 0, 0.12),
+    0 8px 32px rgba(0, 0, 0, 0.06);
+}
+
+.story-modal-video iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.story-modal-esc {
+  font-family: var(--font-nunito);
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.25);
+  user-select: none;
+}
+
+.story-modal-esc kbd {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.5);
+  margin: 0 2px;
+}
+
+@media (max-width: 640px) {
+  /* i cap this width because this area used to trigger horizontal drift on small phones */
+  .story-phone-button {
+    width: min(360px, 82vw);
+    border-width: 6px;
+  }
+
+  .story-modal-video {
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .story-modal-close {
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .story-modal-esc {
+    display: none;
+  }
+}
+
+/* i force clip here to kill any accidental horizontal bleed from scaled visuals */
+html,
+body {
+  max-width: 100%;
+  overflow-x: clip;
+}
