@@ -27,6 +27,7 @@ export async function sendWaitlistConfirmationEmail(
     return;
   }
 
+  console.info("[waitlist] sending confirmation to", entry.email);
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {

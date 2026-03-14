@@ -166,9 +166,7 @@ export default function HeroSection() {
               href="#story"
               className="btn-glass-dark w-full sm:w-auto inline-flex items-center justify-center gap-2 text-[14px] font-medium text-white px-5 py-2.5 rounded-full"
             >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="opacity-80">
-                <path d="M5 3.5L10 7L5 10.5V3.5Z" fill="white" />
-              </svg>
+              <Image src="/images/play-icon.svg" alt="" width={14} height={14} className="opacity-80" style={{ width: 14, height: 14 }} />
               Back Story
             </a>
           </motion.div>

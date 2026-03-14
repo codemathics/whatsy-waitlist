@@ -12,6 +12,7 @@ const nunito = Nunito({
 
 export const metadata: Metadata = {
   title: "Whatsy – Your conversations, handled.",
+  icons: { icon: "/favicon.svg" },
   description:
     "Whatsy helps you chat with your contacts when you are unavailable in a way that feels human, personal, and true to you. Private by design, everything runs securely on your local machine.",
   openGraph: {

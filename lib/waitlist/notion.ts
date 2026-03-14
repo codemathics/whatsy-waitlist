@@ -69,7 +69,7 @@ export async function createWaitlistEntry({
         rich_text: [{ text: { content: useCase } }],
       },
       Source: {
-        rich_text: [{ text: { content: source } }],
+        select: { name: source },
       },
       "Submitted At": {
         date: { start: new Date().toISOString().split("T")[0] },

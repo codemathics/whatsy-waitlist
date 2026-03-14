@@ -66,29 +66,82 @@ export async function POST(req: Request) {
       sendWaitlistConfirmationEmail(entry),
     ]);
 
-    const emailSent = notificationResults[1]?.status === "fulfilled";
+    const emailResult = notificationResults[1];
+    const emailSent = emailResult?.status === "fulfilled";
+    if (emailResult?.status === "rejected") {
+      console.error("[waitlist] confirmation email failed:", emailResult.reason);
+    }
 
     return NextResponse.json({ ok: true, emailSent }, { status: 201 });
   } catch (error) {
-    console.error("[waitlist] submit failed", error);
+    const err = error as {
+      code?: string;
+      status?: number;
+      message?: string;
+      body?: string | { code?: string; message?: string };
+    };
+    let notionCode = err.code;
+    let notionMsg = err.message ?? "";
+    if (typeof err.body === "string") {
+      try {
+        const parsed = JSON.parse(err.body) as { code?: string; message?: string };
+        notionCode = notionCode ?? parsed.code;
+        notionMsg = notionMsg || (parsed.message ?? "");
+      } catch {
+        notionMsg = notionMsg || err.body;
+      }
+    } else if (err.body && typeof err.body === "object") {
+      notionCode = notionCode ?? (err.body as { code?: string }).code;
+      notionMsg = notionMsg || ((err.body as { message?: string }).message ?? "");
+    }
+    if (!notionMsg && error instanceof Error) notionMsg = error.toString();
 
-    const err = error as { code?: string; status?: number; message?: string };
-    if (err.status === 401 || err.code === "unauthorized") {
+    console.error("[waitlist] submit failed:", {
+      code: notionCode,
+      status: err.status,
+      message: notionMsg,
+      raw: String(error),
+      hasApiKey: !!process.env.NOTION_API_KEY,
+      hasDbId: !!process.env.NOTION_WAITLIST_DATABASE_ID,
+    });
+
+    if (err.status === 401 || notionCode === "unauthorized") {
       return NextResponse.json(
-        { error: "Waitlist integration is not authorized. Please contact support." },
+        {
+          error:
+            "Notion integration token is invalid or expired. Check NOTION_API_KEY in .env.local (local) or Vercel env vars (prod). Create a new token at notion.so/my-integrations.",
+        },
         { status: 503 }
       );
     }
 
-    if (err.status === 404 || err.code === "object_not_found") {
+    if (err.status === 404 || notionCode === "object_not_found") {
       return NextResponse.json(
-        { error: "Waitlist database was not found or not shared with integration." },
+        {
+          error:
+            "Waitlist database not found. Share the database with your integration: open the database in Notion → Share → Invite → add your integration.",
+        },
         { status: 503 }
       );
     }
 
+    if (err.status === 400 || notionCode === "validation_error") {
+      return NextResponse.json(
+        {
+          error: "Database schema mismatch. Ensure your Notion database has: Name, Email, Use Case, Source, Submitted At.",
+          details: notionMsg,
+        },
+        { status: 400 }
+      );
+    }
+
+    const debugDetails =
+      process.env.NODE_ENV === "development" ? notionMsg || String(error) : undefined;
     return NextResponse.json(
-      { error: "Unable to submit waitlist request right now." },
+      {
+        error: "Unable to submit waitlist request right now.",
+        details: debugDetails,
+      },
       { status: 500 }
     );
   }

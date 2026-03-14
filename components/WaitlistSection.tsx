@@ -66,7 +66,8 @@ export default function WaitlistSection() {
           typeof data?.error === "string"
             ? data.error
             : "Something went wrong. Please try again.";
-        setErrorMessage(msg);
+        const details = typeof data?.details === "string" ? data.details : "";
+        setErrorMessage(details ? `${msg} ${details}` : msg);
         return;
       }
 
