@@ -36,7 +36,7 @@ export default function Footer() {
 
             <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 md:justify-end">
               <a
-                href="https://instagram.com/whatsyapp"
+                href="https://instagram.com/meetwhatsy"
                 target="_blank"
                 rel="noreferrer"
                 className="text-xs text-text-muted transition-colors hover:text-text-secondary"
@@ -44,7 +44,7 @@ export default function Footer() {
                 Instagram
               </a>
               <a
-                href="https://x.com/whatsyapp"
+                href="https://x.com/whatsyai"
                 target="_blank"
                 rel="noreferrer"
                 className="text-xs text-text-muted transition-colors hover:text-text-secondary"
@@ -52,7 +52,7 @@ export default function Footer() {
                 X
               </a>
               <a
-                href="https://tiktok.com/@whatsyapp"
+                href="https://tiktok.com/meetwhatsy"
                 target="_blank"
                 rel="noreferrer"
                 className="text-xs text-text-muted transition-colors hover:text-text-secondary"
