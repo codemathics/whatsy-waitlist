@@ -31,8 +31,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ["var(--font-nunito)", "Nunito", "ui-rounded", "system-ui", "sans-serif"],
-        display: ["var(--font-louize)", "Georgia", "serif"],
+        sans: ["var(--font-nunito)", "Nunito", "-apple-system", "BlinkMacSystemFont", "ui-rounded", "system-ui", "sans-serif"],
+        display: ["var(--font-louize)", "'Louize'", "Georgia", "serif"],
       },
       animation: {
         "fade-in": "fadeIn 0.6s ease-out forwards",

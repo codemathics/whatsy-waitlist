@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Nunito } from "next/font/google";
+import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
 
@@ -8,6 +9,17 @@ const nunito = Nunito({
   variable: "--font-nunito",
   display: "swap",
   weight: ["400", "500", "600", "700"],
+});
+
+const louize = localFont({
+  src: [
+    { path: "../public/fonts/Louize-Regular.woff2", weight: "400", style: "normal" },
+    { path: "../public/fonts/Louize-RegularItalic.woff2", weight: "400", style: "italic" },
+    { path: "../public/fonts/Louize-Medium.woff2", weight: "500", style: "normal" },
+    { path: "../public/fonts/Louize-MediumItalic.woff2", weight: "500", style: "italic" },
+  ],
+  variable: "--font-louize",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -31,8 +43,8 @@ export default function RootLayout({
   const clarityProjectId = process.env.NEXT_PUBLIC_MICROSOFT_CLARITY_ID;
 
   return (
-    <html lang="en" className={nunito.variable}>
-      <body className="min-h-screen bg-white">
+    <html lang="en" className={`${nunito.variable} ${louize.variable}`}>
+      <body className={`${nunito.className} min-h-screen bg-white`}>
         {children}
         {clarityProjectId ? (
           <Script id="microsoft-clarity" strategy="afterInteractive">

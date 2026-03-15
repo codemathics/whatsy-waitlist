@@ -2,25 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: 'Louize';
-  src: url('/fonts/Louize-Medium.woff2') format('woff2');
-  font-weight: 500;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Louize';
-  src: url('/fonts/Louize-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
-  --font-louize: 'Louize', Georgia, serif;
-  --font-nunito: 'Nunito', ui-rounded, system-ui, sans-serif;
+  /* --font-nunito and --font-louize set by next/font on html, do not override */
 }
 
 * {
@@ -355,6 +338,8 @@ body {
 }
 
 .story-phone-mute-btn {
+  position: relative;
+  z-index: 10;
   width: 48px;
   height: 48px;
   border-radius: 50%;
@@ -381,7 +366,7 @@ body {
   inset: -30%;
   pointer-events: none;
   border-radius: 50%;
-  /* i kept this gradient soft so the phone still feels readable */
+  /* keep gradient soft so phone remains readable */
   background: radial-gradient(
     ellipse 90% 90% at 50% 50%,
     rgba(255, 255, 255, 0.72) 0%,
@@ -545,7 +530,7 @@ body {
 }
 
 @media (max-width: 640px) {
-  /* i cap this width because this area used to trigger horizontal drift on small phones */
+  /* cap width to avoid horizontal drift on small phones */
   .story-phone-button {
     width: min(360px, 82vw);
     border-width: 6px;
@@ -572,7 +557,7 @@ body {
   }
 }
 
-/* i force clip here to kill any accidental horizontal bleed from scaled visuals */
+/* force clip to prevent horizontal bleed from scaled visuals */
 html,
 body {
   max-width: 100%;

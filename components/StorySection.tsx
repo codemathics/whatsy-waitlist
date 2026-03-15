@@ -4,32 +4,20 @@ import { useRef, useState, useCallback, useEffect } from "react";
 import { motion, useScroll, useTransform, useMotionValueEvent, MotionValue } from "framer-motion";
 import Image from "next/image";
 
-const YOUTUBE_VIDEO_ID = "yegZFhUHPmM";
-const MODAL_URL = `https://www.youtube.com/embed/${YOUTUBE_VIDEO_ID}?autoplay=1&mute=0&loop=1&controls=1&modestbranding=1&rel=0&playsinline=1&playlist=${YOUTUBE_VIDEO_ID}`;
+// youtube/vimeo fallback when no self-hosted url
+const YOUTUBE_VIDEO_ID = process.env.NEXT_PUBLIC_STORY_VIDEO_ID || "yegZFhUHPmM";
+const VIDEO_PROVIDER = process.env.NEXT_PUBLIC_STORY_VIDEO_PROVIDER || "youtube";
 
-declare global {
-  interface Window {
-    YT: {
-      Player: new (
-        element: HTMLElement | string,
-        options: {
-          videoId: string;
-          width?: string | number;
-          height?: string | number;
-          playerVars?: Record<string, number | string>;
-        }
-      ) => {
-        playVideo: () => void;
-        pauseVideo: () => void;
-        mute: () => void;
-        unMute: () => void;
-        isMuted: () => boolean;
-      };
-      ready: (fn: () => void) => void;
-    };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
+// build embed urls, ignored when useSelfHosted
+const YOUTUBE_NCOOKIE = `https://www.youtube-nocookie.com/embed/${YOUTUBE_VIDEO_ID}`;
+const MODAL_URL =
+  VIDEO_PROVIDER === "vimeo"
+    ? `https://player.vimeo.com/video/${YOUTUBE_VIDEO_ID}?autoplay=1&title=0&byline=0&portrait=0`
+    : `${YOUTUBE_NCOOKIE}?autoplay=1&mute=0&loop=1&controls=1&modestbranding=1&rel=0&playsinline=1&playlist=${YOUTUBE_VIDEO_ID}`;
+const PHONE_PREVIEW_URL =
+  VIDEO_PROVIDER === "vimeo"
+    ? `https://player.vimeo.com/video/${YOUTUBE_VIDEO_ID}?autoplay=1&muted=1&loop=1&title=0&byline=0&portrait=0`
+    : `${YOUTUBE_NCOOKIE}?autoplay=1&mute=1&loop=1&controls=0&modestbranding=1&rel=0&playsinline=1&playlist=${YOUTUBE_VIDEO_ID}`;
 
 function Word({
   children,
@@ -100,10 +88,22 @@ const PHONE_DWELL_VH = 500; // ~5 seconds of scroll at typical pace
 export default function StorySection() {
   const sectionRef = useRef(null);
   const phoneSectionRef = useRef(null);
+  const phoneVideoRef = useRef<HTMLVideoElement>(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [modalClosing, setModalClosing] = useState(false);
   const [isCompactViewport, setIsCompactViewport] = useState(false);
+  // fetch from api so we read env server-side (avoids next_public_ build-time issues)
+  const [storyVideoUrl, setStoryVideoUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch("/api/config/story-video")
+      .then((r) => r.json())
+      .then((data) => data?.url && setStoryVideoUrl(data.url))
+      .catch(() => {});
+  }, []);
+
+  const useSelfHosted = !!storyVideoUrl;
 
   useEffect(() => {
     const mediaQuery = window.matchMedia("(max-width: 1024px)");
@@ -130,11 +130,12 @@ export default function StorySection() {
     [0.15, 0.35, 0.65, 0.85],
     [0, 1, 1, 0]
   );
-  // blur and fade the phone as it leaves view, same motion language as dashboard
+  // blur and fade phone as it leaves view, same motion as dashboard
   const phoneBlur = useTransform(phoneScrollProgress, [0.7, 0.92], ["0px", "28px"]);
   const phoneOpacity = useTransform(phoneScrollProgress, [0.72, 0.95], [1, 0]);
 
   const handleOpen = useCallback(() => {
+    phoneVideoRef.current?.pause();
     setModalOpen(true);
     setModalClosing(false);
     document.body.style.overflow = "hidden";
@@ -148,6 +149,8 @@ export default function StorySection() {
       setModalOpen(false);
       setModalClosing(false);
       document.body.style.overflow = "";
+      // resume phone video (no-op when iframe/ref null)
+      phoneVideoRef.current?.play().catch(() => {});
     }, 500);
   }, []);
 
@@ -160,70 +163,34 @@ export default function StorySection() {
     return () => window.removeEventListener("keydown", onKey);
   }, [modalOpen, handleClose]);
 
-  // autoplay preview when this section is visible, with manual mute toggle
-  const playerRef = useRef<InstanceType<Window["YT"]["Player"]> | null>(null);
-  const playerContainerRef = useRef<HTMLDivElement>(null);
-  const [isMuted, setIsMuted] = useState(true);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const loadYouTubeAPI = () => {
-      if (window.YT?.ready) {
-        window.YT.ready(initPlayer);
-        return;
-      }
-      const tag = document.createElement("script");
-      tag.src = "https://www.youtube.com/iframe_api";
-      const firstScript = document.getElementsByTagName("script")[0];
-      firstScript?.parentNode?.insertBefore(tag, firstScript);
-      const prevReady = window.onYouTubeIframeAPIReady;
-      window.onYouTubeIframeAPIReady = () => {
-        prevReady?.();
-        window.YT?.ready(initPlayer);
-      };
-    };
-    const initPlayer = () => {
-      if (!playerContainerRef.current || playerRef.current) return;
-      try {
-        playerRef.current = new window.YT.Player(playerContainerRef.current, {
-          videoId: YOUTUBE_VIDEO_ID,
-          width: "100%",
-          height: "100%",
-          playerVars: {
-            autoplay: 1,
-            mute: 1,
-            loop: 1,
-            controls: 0,
-            modestbranding: 1,
-            rel: 0,
-            playsinline: 1,
-            playlist: YOUTUBE_VIDEO_ID,
-            showinfo: 0,
-          },
-        });
-        } catch (_) {}
-    };
-    loadYouTubeAPI();
-  }, []);
-
+  // lazy-load iframe when phone in view (avoids loading youtube before scroll)
+  const [phoneVideoReady, setPhoneVideoReady] = useState(false);
   useMotionValueEvent(phoneScrollProgress, "change", (v) => {
-    if (v > 0.2 && playerRef.current?.playVideo) {
-      playerRef.current.playVideo();
-    }
+    if (v > 0.15 && !phoneVideoReady) setPhoneVideoReady(true);
   });
-
-  const toggleMute = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (!playerRef.current) return;
-    if (playerRef.current.isMuted?.()) {
-      playerRef.current.unMute();
-      setIsMuted(false);
-    } else {
-      playerRef.current.mute();
-      setIsMuted(true);
-    }
+  // also show on mount if user scrolls directly to section or small viewport
+  useEffect(() => {
+    const timer = setTimeout(() => setPhoneVideoReady((r) => r || true), 1500);
+    return () => clearTimeout(timer);
   }, []);
+
+  // mute button: self-hosted unmutes in-place; embed opens modal for sound
+  const [isMuted, setIsMuted] = useState(true);
+  const handleMuteClick = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const video = phoneVideoRef.current;
+      if (storyVideoUrl && video) {
+        video.muted = !video.muted;
+        setIsMuted(video.muted);
+        if (!video.muted) video.play().catch(() => {}); // resume if browser paused on unmute
+      } else {
+        handleOpen();
+      }
+    },
+    [handleOpen, storyVideoUrl]
+  );
 
   return (
     <>
@@ -277,7 +244,7 @@ export default function StorySection() {
             paddingBottom: "4vh",
           }}
         >
-          {/* this glow should only show while the phone is centered */}
+          {/* glow only visible while phone is centered */}
           <motion.div
             className="story-phone-gradient"
             style={{ opacity: gradientOpacity }}
@@ -295,11 +262,32 @@ export default function StorySection() {
               onClick={handleOpen}
               aria-label="Watch backstory video"
             >
-              <div className="story-phone-video">
-                <div
-                  ref={playerContainerRef}
-                  className="absolute inset-0 [&>iframe]:absolute [&>iframe]:top-1/2 [&>iframe]:left-1/2 [&>iframe]:w-[110%] [&>iframe]:h-[110%] [&>iframe]:-translate-x-1/2 [&>iframe]:-translate-y-1/2 [&>iframe]:border-0"
-                />
+              <div className="story-phone-video bg-neutral-900">
+                <div className="absolute inset-0 [&>iframe]:absolute [&>iframe]:top-1/2 [&>iframe]:left-1/2 [&>iframe]:w-[110%] [&>iframe]:h-[110%] [&>iframe]:-translate-x-1/2 [&>iframe]:-translate-y-1/2 [&>iframe]:border-0 [&>video]:absolute [&>video]:top-1/2 [&>video]:left-1/2 [&>video]:w-[110%] [&>video]:h-[110%] [&>video]:-translate-x-1/2 [&>video]:-translate-y-1/2 [&>video]:object-cover [&>video]:border-0">
+                  {phoneVideoReady &&
+                    (useSelfHosted ? (
+                      <video
+                        ref={phoneVideoRef}
+                        src={storyVideoUrl}
+                        autoPlay
+                        muted={isMuted}
+                        loop
+                        playsInline
+                        preload="auto"
+                        onLoadedData={(e) => e.currentTarget.play().catch(() => {})}
+                        onCanPlay={(e) => e.currentTarget.play().catch(() => {})}
+                        className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 object-cover border-0 bg-neutral-900"
+                      />
+                    ) : (
+                      <iframe
+                        src={PHONE_PREVIEW_URL}
+                        title="Whatsy backstory preview"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        className="absolute top-1/2 left-1/2 w-[110%] h-[110%] -translate-x-1/2 -translate-y-1/2 border-0"
+                      />
+                    ))}
+                </div>
               </div>
               <div className="story-phone-overlay">
                 <div className="story-phone-arrows">
@@ -316,12 +304,12 @@ export default function StorySection() {
             </button>
             <button
               type="button"
-              onClick={toggleMute}
+              onClick={handleMuteClick}
               className="story-phone-mute-btn"
-              aria-label={isMuted ? "Unmute video" : "Mute video"}
+              aria-label={useSelfHosted ? (isMuted ? "Unmute video" : "Mute video") : "Watch with sound"}
             >
               <Image
-                src={isMuted ? "/images/volume-mute.svg" : "/images/volume-unmute.svg"}
+                src={useSelfHosted && !isMuted ? "/images/volume-unmute.svg" : "/images/volume-mute.svg"}
                 alt=""
                 width={24}
                 height={24}
@@ -347,12 +335,23 @@ export default function StorySection() {
               </button>
 
               <div className="story-modal-video">
-                <iframe
-                  src={MODAL_URL}
-                  title="Whatsy backstory"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                />
+                {useSelfHosted ? (
+                  <video
+                    src={storyVideoUrl}
+                    autoPlay
+                    loop
+                    playsInline
+                    controls
+                    className="w-full h-full object-contain"
+                  />
+                ) : (
+                  <iframe
+                    src={MODAL_URL}
+                    title="Whatsy backstory"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                )}
               </div>
 
               <div className="story-modal-esc">
