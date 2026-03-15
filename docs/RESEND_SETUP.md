@@ -39,8 +39,10 @@ Using a subdomain (e.g. `updates.whatsy.ai`) is recommended for deliverability.
 **Local (website/.env.local):**
 ```
 RESEND_API_KEY=re_xxxxxxxxxxxx
-WAITLIST_FROM_EMAIL=Whatsy <updates@yourdomain.com>
+WAITLIST_FROM_EMAIL=Whatsy <onboard@yourdomain.com>
 ```
+
+`WAITLIST_FROM_EMAIL` must be a full email address, e.g. `onboard@waitlist.whatsy.ai` or `Whatsy <onboard@waitlist.whatsy.ai>`. Using only a domain (e.g. `waitlist.whatsy.ai`) will fail with a 422 error.
 
 **Vercel (Project → Settings → Environment Variables):**
 - `RESEND_API_KEY` – your Resend API key

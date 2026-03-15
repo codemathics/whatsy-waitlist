@@ -37,16 +37,16 @@ export async function sendWaitlistConfirmationEmail(
     body: JSON.stringify({
       from,
       to: [entry.email],
-      subject: "You're on the Whatsy waitlist",
+      subject: `${entry.name}, you're on the Whatsy waitlist!`,
       text: [
-        `Hi ${entry.name},`,
+        `hi ${entry.name},`,
         "",
-        "Thanks for joining the Whatsy waitlist. You're officially in.",
-        `Use case noted: ${entry.useCase}`,
+        "thanks for joining the Whatsy waitlist. you're officially in,.",
+        `your use case, ${entry.useCase}, will help me understand how to best build for you.`,
         "",
-        "We'll reach out as soon as it's ready.",
+        "can't wait to share whatsy with you soon.!",
         "",
-        "- Whatsy",
+        "- clement and the Whatsy team",
       ].join("\n"),
     }),
   });
