@@ -30,7 +30,7 @@ export default function Footer() {
 
         <ScrollReveal delay={0.1} once={false}>
           <div className="mt-8 flex flex-col gap-4 border-t border-black/5 pt-6 md:flex-row md:items-center md:justify-between">
-            <p className="text-xs text-text-muted">
+            <p className="text-center md:text-left text-xs text-text-muted">
               &copy; {new Date().getFullYear()} Whatsy. All rights reserved.
             </p>
 

@@ -23,6 +23,7 @@ const louize = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || "https://whatsy.ai"),
   title: "Whatsy – Your conversations, handled.",
   icons: { icon: "/favicon.svg" },
   description:
@@ -32,6 +33,14 @@ export const metadata: Metadata = {
     description:
       "An autonomous WhatsApp agent that replies as you using a local LLM. No data ever leaves your machine.",
     type: "website",
+    images: ["/images/xBanner.png"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Whatsy – Your conversations, handled.",
+    description:
+      "An autonomous WhatsApp agent that replies as you using a local LLM. No data ever leaves your machine.",
+    images: ["/images/xBanner.png"],
   },
 };
 
