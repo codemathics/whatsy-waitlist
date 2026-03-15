@@ -44,7 +44,7 @@ export async function sendWaitlistConfirmationEmail(
         "<p>thanks for joining the Whatsy waitlist. you're officially in.</p>",
         `<p>your use case, <strong>${entry.useCase}</strong>, will help me understand how to best build for you.</p>`,
         "",
-        "<p>can't wait to share whatsy with you soon.!</p>",
+        "<p>can't wait to share whatsy with you soon!</p>",
         "",
         "<p>- clement and the Whatsy team</p>",
       ].join("\n"),
