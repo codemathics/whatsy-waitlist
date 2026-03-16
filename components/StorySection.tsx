@@ -83,7 +83,8 @@ function WordReveal({
   );
 }
 
-const PHONE_DWELL_VH = 500; // ~5 seconds of scroll at typical pace
+const PHONE_DWELL_VH = 500; // ~5 screens of scroll on desktop
+const PHONE_DWELL_VH_MOBILE = 120; // ~1 screen on mobile – reduced so next section appears quickly
 
 export default function StorySection() {
   const sectionRef = useRef(null);
@@ -233,7 +234,7 @@ export default function StorySection() {
           marginTop: "-100vh",
           position: "relative",
           zIndex: 35,
-          minHeight: `${isCompactViewport ? 380 : PHONE_DWELL_VH}vh`,
+          minHeight: `${isCompactViewport ? PHONE_DWELL_VH_MOBILE : PHONE_DWELL_VH}vh`,
         }}
       >
         <div
