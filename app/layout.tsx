@@ -1,15 +1,7 @@
 import type { Metadata } from "next";
-import { Nunito } from "next/font/google";
 import localFont from "next/font/local";
 import Script from "next/script";
 import "./globals.css";
-
-const nunito = Nunito({
-  subsets: ["latin"],
-  variable: "--font-nunito",
-  display: "swap",
-  weight: ["400", "500", "600", "700"],
-});
 
 const louize = localFont({
   src: [
@@ -52,8 +44,8 @@ export default function RootLayout({
   const clarityProjectId = process.env.NEXT_PUBLIC_MICROSOFT_CLARITY_ID;
 
   return (
-    <html lang="en" className={`${nunito.variable} ${louize.variable}`}>
-      <body className={`${nunito.className} min-h-screen bg-white`}>
+    <html lang="en" className={louize.variable}>
+      <body className="min-h-screen bg-white font-sans">
         {children}
         {clarityProjectId ? (
           <Script id="microsoft-clarity" strategy="afterInteractive">
